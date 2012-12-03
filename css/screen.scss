@@ -1,0 +1,32 @@
+---
+---
+
+body {
+  background-image: url('/images/cream_dust.png');
+}
+
+.container div.subnav {
+  background-color: transparent;
+}
+
+#main-navigation.nav.nav-pills {
+
+  li a {
+    margin-top: 10px;
+    padding: 10px;
+  }
+
+  li a:hover {
+    background-color: maroon;
+    color: white;
+  }
+
+  li a.active {
+    background-color: maroon;
+    color: white;
+  }
+}
+
+section.post {
+  margin-top: 20px;
+}
