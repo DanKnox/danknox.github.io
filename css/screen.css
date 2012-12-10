@@ -145,6 +145,7 @@ section.post {
 article.post {
   font-size: 17px;
   line-height: 24px;
+  text-align: justify;
 }
 
 article.post .hero-unit {
