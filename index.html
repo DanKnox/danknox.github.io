@@ -1,22 +1,17 @@
 ---
 layout: default
-title: Dan Knox
+title: Home
 current: home
 ---
 
-<br><br>
-<div class="hero-unit">
-  <h1>Coming Soon</h1>
+<div id="content" class="span9">
+  {% for post in site.posts %}
+    <div class="hero-unit">
+      <p><h2><div><i class="icon-inbox"></i></div> <a href="{{ post.url }}">{{ post.title }}</a></h2>{{ post.date | date_to_string }} - {{site.author.name}}</p>
+      <p>{{ post.content | strip_html | truncatewords: 40 }}</p>
+      <p><a href="{{ post.url }}">Read more ...</a></p>
+    </div>
+  {% endfor %}
 </div>
 
-<div class="row">
-  <div class="span12">
-
-    <!-- ul class="posts">
-      {% for post in site.posts %}
-        <li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ BASE_PATH }}{{ post.url }}">{{ post.title }}</a></li>
-      {% endfor %}
-    </ul -->
-
-  </div>
-</div>
+{% include sidebar.html %}

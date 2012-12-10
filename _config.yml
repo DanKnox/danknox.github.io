@@ -1,2 +1,17 @@
 markdown: rdiscount
 pygments: true
+auto: true
+
+permalink: /:year/:month/:day/:title
+
+production_url: http://danknox.github.com
+
+author:
+  name: Dan Knox
+  gravatar: 14c959ae61035ade3e136aaeedfc6e42
+  email: dknox@threedotloft.com
+  web: http://danknox.github.com
+  twitter: DanKnox
+  github: DanKnox
+  rubygems: DanKnox
+  linkedin: Dan Knox

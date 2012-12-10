@@ -2,22 +2,32 @@
 <head>
 
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-  <title>{{ page.title }}</title>
-  <meta name="author" content="Tom Preston-Werner" />
-  <link href="http://feeds.feedburner.com/tom-preston-werner" rel="alternate" title="Tom Preston-Werner" type="application/atom+xml" />
+  <title>Dan Knox - {{ page.title }}</title>
+  <meta name="author" content="Dan Knox" />
+  <link href="http://feeds.feedburner.com/dan-knox" rel="alternate" title="Dan Knox" type="application/atom+xml" />
   <meta name="readability-verification" content="QCzSs992GxmRYRKVpPeZ6LE2tS8aYKxsSSQKV8YM"/>
 
   <!-- Bootstrap CSS -->
   <link href="/css/bootstrap.min.css" rel="stylesheet">
 
+  <!-- Font Awesome CSS -->
+  <link href="/css/font-awesome.css" rel="stylesheet">
+
   <!-- syntax highlighting CSS -->
   <link rel="stylesheet" href="/css/syntax.css" type="text/css" />
 
-  <!-- Homepage CSS -->
-  <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+  <!-- jQuery -->
+  <script src="/javascripts/jquery.js"></script>
 
   <!-- Bootstrap JavaScript -->
   <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
+
+  <!-- Coderwall CSS/JavaScript -->
+  <link href="http://coderwall.com/stylesheets/jquery.coderwall.css" media="all" rel="stylesheet" type="text/css">
+  <script src="http://coderwall.com/javascripts/jquery.coderwall.js"></script>
+
+  <!-- Homepage CSS -->
+  <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
 
 </head>
 <body>
@@ -25,28 +35,35 @@
   <div class="container">
 
     <header class="jumbotron subhead" id="overview">
-      <div class="row">
-        <div class="span6">
-          <h1>Dan Knox</h1>
-          <p class="lead">Thoughts. Comments. Projects.</p>
-        </div>
+    <div class="row">
+      <div class="span6">
+        <h1>Dan Knox</h1>
+        <p class="lead">Thoughts. Comments. Projects.</p>
       </div>
+      {% include contact.html %}
+    </div>
 
-      <div class="subnav">
-        <ul class="nav nav-pills" id="main-navigation">
-          <li><a class="{% if page.current == "home" %}active{% endif %}" href="#typography">Home</a></li>
-          <li><a href="#navbar">About Me</a></li>
-        </ul>
-      </div>
+    <div class="subnav">
+      <ul class="nav nav-pills" id="main-navigation">
+        <li><a class="{% if page.current == "home" %}active{% endif %}" href="/">Home</a></li>
+        <li><a class="{% if page.current == "projects" %}active{% endif %}" href="/projects.html">Projects</a></li>
+        <li><a class="{% if page.current == "posts" %}active{% endif %}" href="/posts.html">Posts</a></li>
+      </ul>
+    </div>
 
     </header>
+    <div class="row">
 
-    {{ content }}
+      {{ content }}
 
-    <footer>
-      &copy Dan Knox 2012
-    </footer>
+    </div>
 
-  </div>
-</body>
+      <hr>
+
+      <footer>
+        &copy Dan Knox 2012
+      </footer>
+
+    </div>
+  </body>
 </html>

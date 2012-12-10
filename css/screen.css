@@ -1,0 +1,190 @@
+/* Global */
+.hero-unit {
+  background-image: url('/images/light_noise_diagonal.png');
+}
+
+code, pre {
+  background-color: #f8f8f8;
+  font-size: 15px;
+  line-height: 17px;
+  font-family: Consolas,Menlo,Monaco,"Courier New",monospace;
+}
+
+.container {
+  background-color: white;
+  padding: 20px;
+}
+
+p {
+  font-family: Arial !important;
+  color: #333 !important;
+}
+
+a {
+  font-family: Arial !important;
+}
+
+/* Sidebar */
+.recent-posts i {
+  margin-bottom: 6px;
+  margin-right: 10px
+}
+
+/* Coderwall Badges 
+.coderwall-root.vertical {
+  width: 213px;
+}
+
+.coderwall-root.vertical a {
+  display: table;
+  float: left;
+  margin-right: 5px;
+}
+*/
+
+/* Contact Info */
+#contact-info {
+  margin-top: 25px;
+  margin-right: 75px;
+  position: relative;
+}
+
+#contact-info div {
+  position: relative;
+  margin-bottom: 5px;
+  color: black
+}
+
+#contact-info i {
+  font-size: 20px;
+  margin-right: 7px;
+}
+
+#contact-info a {
+  font-size: 14px;
+  top: -1px;
+  color: black;
+  position: absolute;
+  left: 25px;
+}
+
+/* Main Header */
+
+p.lead {
+  color: #777 !important;
+}
+
+/* Main Navigation */
+.container div.subnav {
+  background-color: transparent;
+}
+
+#main-navigation.nav.nav-pills li a {
+  margin-top: 10px;
+  padding: 10px;
+}
+
+#main-navigation.nav.nav-pills li a:hover {
+  background-color: maroon;
+  color: white;
+}
+
+#main-navigation.nav.nav-pills li a.active{
+  background-color: maroon;
+  color: white;
+}
+
+/* Homepage */
+body {
+  font-size: 17px;
+}
+
+h2 {
+  margin-bottom: 20px;
+}
+
+.hero-unit {
+  color: #333;
+}
+
+.hero-unit h2 i {
+  float: left;
+  margin-right: 30px;
+  margin-top: 12px;
+}
+
+#content .hero-unit a {
+  color: #333;
+  font-weight: 600;
+}
+
+.subnav {
+  margin-bottom: 20px;
+}
+
+.posts {
+  list-style-type: none;
+  margin: 0px;
+}
+.posts span {
+  color: black;
+}
+
+/* Footer */
+footer {
+  margin-top: 20px;
+}
+
+
+/* Post Wrapper */
+section.post {
+  margin-top: 20px;
+}
+
+/* Post Body */
+section.post #body {
+  font-size: 17px;
+  line-height: 25px;
+}
+
+section.post #body p {
+  margin-bottom: 20px;
+}
+
+/* Post Headings */
+
+section.post h2 {
+  margin-bottom: 20px;
+}
+
+/* Sidebar */
+.post #sidebar {
+  margin-left: 30px;
+  width: 240px;
+  background-color: #eee;
+  padding: 23px;
+  border: 1px solid #ccc;
+	line-height:28px;
+}
+
+.post #sidebar h4 {
+  line-height: 28px;
+}
+
+/* Pages */
+#content.page hr {
+  border-bottom: 1px solid #ccc;
+}
+
+/* tag_box ======================================================== */
+
+.tag_box {
+	list-style:none;
+	margin:0;
+	overflow:hidden;
+}
+.tag_box.inline li {
+	float:left;
+}
+	
+

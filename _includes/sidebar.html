@@ -1,0 +1,11 @@
+<nav class="span3">
+  <h3 class="recent-posts">Recent Posts</h3>
+  <hr />
+  <div id="posts">
+    {% for post in site.posts limit:10%}
+    <p><i class="icon-link"></i> <a href="{{ post.url }}">{{ post.title }}</a></p>
+    {% endfor %}
+    <hr>
+  </div>
+  <section class="coderwall" data-coderwall-username="DanKnox" data-coderwall-orientation="vertical"></section>
+</nav>
