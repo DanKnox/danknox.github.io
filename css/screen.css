@@ -118,6 +118,10 @@ h2 {
   font-weight: 600;
 }
 
+.hero-unit p {
+  text-align: justify;
+}
+
 .subnav {
   margin-bottom: 20px;
 }
