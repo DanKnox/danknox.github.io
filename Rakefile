@@ -102,7 +102,7 @@ end # task :preview
 
 # Public: Alias - Maintains backwards compatability for theme switching.
 task :switch_theme => "theme:switch"
-
+ 
 namespace :theme do
   
   # Public: Switch from one theme to another for your blog.
