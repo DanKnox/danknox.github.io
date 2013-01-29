@@ -251,7 +251,7 @@ rescue JSON::ParserError
 end
 {% endhighlight %}
 
-> Note that in a real world application it would not be a good idea to
+> In a real application it would typically not be a good idea to
 silently swallow the JSON parser error. It would be far better to define
 your own custom exception class and raise that. Just make sure to
 clearly document the exceptions your method may raise and why.
