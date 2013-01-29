@@ -18,6 +18,7 @@ code, pre {
 p {
   font-family: Arial !important;
   color: #333 !important;
+  line-height: 1.6em;
 }
 
 a {
@@ -152,8 +153,25 @@ article.post {
   text-align: justify;
 }
 
+/* Give some extra margin to code blocks */
+article .highlight {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+/* Extra margin for subtitles */
+article h3, h4, h5 {
+  margin-top: 13px;
+  margin-bottom: 13px;
+}
+
 article.post .hero-unit {
   margin-top: 50px;
+}
+
+article.post h1, h2, h3, h4 {
+  text-align: left;
+  font-family: "Arial Narrow Bold", Arial;
 }
 
 /* Post Headings */
@@ -163,17 +181,12 @@ section.post h2 {
 }
 
 /* Sidebar */
-.post #sidebar {
-  margin-left: 30px;
-  width: 240px;
-  background-color: #eee;
-  padding: 23px;
-  border: 1px solid #ccc;
-	line-height:28px;
+#sidebar #posts p {
+  padding-left: 19px;
 }
 
-.post #sidebar h4 {
-  line-height: 28px;
+#sidebar #posts p i {
+  margin-left: -19px;
 }
 
 /* Pages */
