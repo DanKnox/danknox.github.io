@@ -270,7 +270,7 @@ Now we will go ahead and update our public verb methods to use this new
 {% highlight ruby %}
 require "net/http"
 require "uri"
-require "openstruct"
+require "ostruct"
 require "json"
 
 class Connection
