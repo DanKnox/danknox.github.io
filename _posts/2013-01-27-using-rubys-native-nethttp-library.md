@@ -10,7 +10,7 @@ tags: [ruby general http]
 
 In this post, I am going to step through constructing a basic wrapper
 class for simplifying interaction with the `Net::HTTP` library. I came
-accross a few answers on stack overflow recently that seemed to give the
+across a few answers on stack overflow recently that seemed to give the
 impression that working with `Net::HTTP` is more difficult than it needs
 to be.
 
@@ -33,8 +33,9 @@ straightforward but least well documented.
 First, we will create a new instance of the `Net::HTTP` class
 with a reference to our main API endpoint. The endpoint is the full
 address of the API server without any of the paths for the specific
-requests. In our case, we will make up a fictional endpoint located at
-`http://api.random.com`. 
+requests. In our case, we will use the new API based temporary email
+service that I am building. It is currently located at
+`http://dev.threedotloft.com`.
 
 {% highlight ruby %}
 require "net/http"
@@ -113,7 +114,7 @@ require "uri"
 
 class Connection
 
-  ENDPOINT = "http://api.random.com"
+  ENDPOINT = "http://dev.threedotloft.com"
 
   def initialize(endpoint = ENDPOINT)
     uri = URI.parse(endpoint)
@@ -217,14 +218,14 @@ def delete(path, params)
 end
 {% endhighlight %}
 
-Since our fictional API only makes use of these four common verbs, we
+Since the TmpMail API only makes use of these four common verbs, we
 are finished with our request logic. If we need to add more later it is
 now a trivial matter of adding the correct class to the `VERB_MAP` and
 implementing any special parameter handling within the request method.
 
 We are almost finished. Our class can now perform the most common http
 actions, exposing a simple and intuitive public API. However, our
-fictional endpoint returns JSON response bodies and it would be a pain
+API endpoint returns JSON response bodies and it would be a pain
 to have to deserialize the response each time we made a request so lets go
 ahead and add deserialization to the Connection class.
 
@@ -337,12 +338,113 @@ class Connection
 end
 {% endhighlight %}
 
-There we have it. Our finished http client. Feel free to take it out for
-a spin. As mentioned above, this basic example is mostly devoid of error
-handling and meant for demonstration purposes only. I may follow up this
-post with an example of developing this class in a test driven manner or
-I may get bored and post about something else entirely. Only time will
-tell.
+There we have it. Our finished HTTP client. Lets take it out for a quick
+spin and check a few emails.
 
+{% highlight ruby %}
+> connection = Connection.new
+ => #<Connection:0x007ffac20f5270 @http=#<Net::HTTP dev.threedotloft.com:80 open=false>>
+
+> res = connection.post("/account", {email: 'dknox@threedotloft.com',
+>                                    password: 'some temp pass'})
+> res.code
+ => 200
+> res.body
+ => {
+  "email"=>"dknox@threedotloft.com",
+  "auth_token"=>"SnpuWVlPYmx2R052amVrQnd6RVV3TFtYcg=="
+}
+{% endhighlight %}
+
+I'm going to store the authentication token in a variable for use
+in the next few API calls.
+
+{% highlight ruby %}
+> auth_token = res.body["auth_token"]
+{% endhighlight %}
+
+Next we are going to request a list of the available domains on the
+server and then join one so we can start receiving emails.
+
+{% highlight ruby %}
+> res = connection.get("/domains",{token: auth_token})
+> res.body
+ => 
+[
+  {
+    "name"=>"dev.threedotloft.com"
+  }, 
+  {
+    "name"=>"tmpmail.threedotloft.com"
+  }
+] 
+
+# Join the domain first
+> res = connection.post("/domains/join",{token: auth_token,
+                                         name: 'dev.threedotloft.com'})
+
+ => #<OpenStruct code="200", body=[{"name"=>"dev.threedotloft.com"}]>
+
+# Claim your email second
+> res = connection.post("/inboxes/claim",{token: auth_token,
+                                          name: 'dknox',
+                                          domain: 'dev.threedotloft.com'})
+> res.body
+ => [
+ {
+   "name"=>"dank",
+   "message_count"=>0,
+   "domain"=>"dev.threedotloft.com",
+   "full_address"=>"dank@dev.threedotloft.com"
+ },
+ {
+   "name"=>"dknox",
+   "message_count"=>0,
+   "domain"=>"dev.threedotloft.com",
+   "full_address"=>"dknox@dev.threedotloft.com"
+ }
+]
+{% endhighlight %}
+
+Based on the output from the last call, you can see that I currently own
+two email addresses. The first is `dank@dev.threedotloft.com` and the
+second is `dknox@dev.threedotloft.com`. They both currently have zero
+messages in their Inbox. I am going to send a test email out and see if
+it shows up in my email service.
+
+You will have to imagine the sending of the email as it is currently
+taking place off-camera...
+
+Alright, the test email has been sent. Lets call the API again to see if
+it has arrived.
+
+{% highlight ruby %}
+> res = connection.get("/messages", {token: auth_token,
+                                     inbox: 'dknox',
+                                     domain: 'dev.threedotloft.com'})
+> res.body.count
+ => 1
+> res.body
+ =>
+  [{
+    "id"=>"512ea4661d41c8adf7000001", 
+    "date"=>"2013-02-27T16:27:51-08:00", 
+    "subject"=>"Testing Email API", 
+    "to"=>["dknox@dev.threedotloft.com"], 
+    "from"=>["dknox@threedotloft.com"], 
+    "reply_to"=>nil, 
+    "cc_addrs"=>[], "bcc_addrs"=>[], 
+    "headers"=>{}, 
+    "raw"=> **Omitted Due To Length**
+  }]
+{% endhighlight %}
+
+Awesome, it looks like my test email arrived successfully, thus concluding this
+demonstration.
+
+Feel free to use this code yourself. As mentioned above, this basic example is mostly devoid of error
+handling. If you choose to use it you should probably modify it a bit
+first.
+ 
 [1]: http://ruby-doc.org/stdlib-1.9.3/libdoc/net/http/rdoc/Net/HTTP.html
 [2]: http://ruby-doc.org/stdlib-1.9.3/libdoc/ostruct/rdoc/OpenStruct.html

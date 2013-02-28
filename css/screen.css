@@ -14,6 +14,17 @@ code, pre {
   font-family: Consolas,Menlo,Monaco,"Courier New",monospace;
 }
 
+pre code {
+  width: 100%;
+  display: block;
+  overflow-x: scroll;
+}
+
+pre code span {
+  white-space: pre !important;
+  word-wrap: normal;
+}
+
 .container {
   background-color: white;
   padding: 20px;
@@ -165,6 +176,8 @@ article.post {
 article .highlight {
   margin-top: 20px;
   margin-bottom: 20px;
+  width: 100%;
+  overflow-x: scroll;
 }
 
 /* Extra margin for subtitles */
