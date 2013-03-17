@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "WebsocketRails on the Pogoapp Blog"
+title: "websocket-rails on the Pogoapp Blog"
 description: "The kind folks over at Pogoapp featured WebsocketRails on
 their blog."
 category: 
@@ -9,7 +9,7 @@ tags: []
 {% include JB/setup %}
 
 The awesome folks over at [Pogoapp][2] just added a post to their
-Blog about using my [WebsocketRails][3] Gem to demonstrate the Pogoapp
+Blog about using my [websocket-rails][3] Gem to demonstrate the Pogoapp
 WebSocket support. They were also nice enough to update the code from my
 very outdated example application to work with the latest version of the
 Gem and clean up some of the CoffeeScript while they were at it. You can
@@ -19,7 +19,7 @@ I appreciate them taking the time to update the example app code.
 It is something that I have been meaning to do for quite awhile. There 
 are a ton of useful new features in the Gem that the example app does not
 yet cover. Expect a post coming soon that walks through all of the new
-functionality that the WebsocketRails gem has to offer
+functionality that the websocket-rails gem has to offer
 
 ### You Should Check Out Pogoapp!
 
@@ -35,10 +35,18 @@ gitlab-shell will fully replace Gitolite as their repo management system.
 Paul shared with me some of the secret sauce behind how Pogoapp developed
 their own Redis backed git repository management system. He then went
 above and beyond by walking me through the details of what the Pogoapp
-team have spent several years building out infrastructure wise. Needless
+team have built out infrastructure wise. Needless
 to say, I am very impressed with their core infrastructure and the
 powerful management interface that they have created. For those of you
 looking for a clean way out of the seemingly endless Heroku money pit, I highly recommend you check out Pogoapp for your next application.
+
+### No I'm Not Affiliated With Them
+
+Although my recommendation may sound a bit overly enthusiastic, I can
+assure you it's genuine. I am happy to see more players pop up in the
+PaaS market. I personally feel that Heroku and Engine Yard have been
+price gouging developers for awhile now. A bit of friendly competition
+is good for everyone involved. Support the little guys.
 
 [1]: https://github.com/themgt
 [2]: http://www.pogoapp.com
