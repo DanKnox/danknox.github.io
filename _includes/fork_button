@@ -1,11 +1,11 @@
 {% assign BASE_PATH = "http://ghbtns.com/github-btn.html?" %}
 {% assign ARGUMENTS = "&type=fork&count=true&size=small" %}
 <iframe
-  src="{{ BASE_PATH }}user={{ site.author.github }}&repo={{ repo }}{{ ARGUMENTS }}"
+  src="{{ BASE_PATH }}user={{ user }}&repo={{ repo }}{{ ARGUMENTS }}"
   allowtransparency="true"
   frameborder="0"
   scrolling="0"
-  width="80"
+  width="85"
   height="30"
 >
 </iframe>
