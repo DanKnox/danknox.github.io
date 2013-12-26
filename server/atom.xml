@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+ 
+ <title></title>
+ <link href="http://danknox.github.com/atom.xml" rel="self"/>
+ <link href="http://danknox.github.com"/>
+ <updated>2013-03-16T19:43:11-07:00</updated>
+ <id>http://danknox.github.com</id>
+ <author>
+   <name>Dan Knox</name>
+   <email>dknox@threedotloft.com</email>
+ </author>
+
+ 
+ <entry>
+   <title>WebsocketRails on the Pogoapp Blog</title>
+   <link href="http://danknox.github.com/2013/03/16/websocketrails-on-the-pogoapp-blog"/>
+   <updated>2013-03-16T00:00:00-07:00</updated>
+   <id>http://danknox.github.com/2013/03/16/websocketrails-on-the-pogoapp-blog</id>
+   <content type="html">&lt;p&gt;The awesome folks over at &lt;a href=&quot;http://www.pogoapp.com&quot;&gt;Pogoapp&lt;/a&gt; just added a post to their
+Blog about using my &lt;a href=&quot;http://github.com/DanKnox/websocket-rails&quot;&gt;WebsocketRails&lt;/a&gt; Gem to demonstrate the Pogoapp
+WebSocket support. They were also nice enough to update the code from my
+very outdated example application to work with the latest version of the
+Gem and clean up some of the CoffeeScript while they were at it. You can
+check out the post &lt;a href=&quot;http://www.pogoapp.com/blog/posts/websockets-on-rails-4-and-ruby-2&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;I appreciate them taking the time to update the example app code.
+It is something that I have been meaning to do for quite awhile. There
+are a ton of useful new features in the Gem that the example app does not
+yet cover. Expect a post coming soon that walks through all of the new
+functionality that the WebsocketRails gem has to offer&lt;/p&gt;
+
+&lt;h3&gt;You Should Check Out Pogoapp!&lt;/h3&gt;
+
+&lt;p&gt;I met &lt;a href=&quot;https://github.com/themgt&quot;&gt;Paul&lt;/a&gt; from Pogoapp the other day on IRC and was quite
+impressed with what he and the Pogoapp team have put together. We
+originally began chatting about the current implementation of
+&lt;a href=&quot;http://gitlabhq.com&quot;&gt;Gitlab's&lt;/a&gt; new &lt;a href=&quot;https://github.com/gitlabhq/gitlab-shell&quot;&gt;gitlab-shell&lt;/a&gt; project. For those of you that are
+unfamiliar with the gitlab-shell project, it is a Ruby based git
+repository management system that is heavily tied into the core Gitlab
+code base. In version 5.0 of Gitlab, due out on the 22nd of this month,
+gitlab-shell will fully replace Gitolite as their repo management system.&lt;/p&gt;
+
+&lt;p&gt;Paul shared with me some of the secret sauce behind how Pogoapp developed
+their own Redis backed git repository management system. He then went
+above and beyond by walking me through the details of what the Pogoapp
+team have spent several years building out infrastructure wise. Needless
+to say, I am very impressed with their core infrastructure and the
+powerful management interface that they have created. For those of you
+looking for a clean way out of the seemingly endless Heroku money pit, I highly recommend you check out Pogoapp for your next application.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Using Ruby's Native Net::HTTP Library</title>
+   <link href="http://danknox.github.com/2013/01/27/using-rubys-native-nethttp-library"/>
+   <updated>2013-01-27T00:00:00-08:00</updated>
+   <id>http://danknox.github.com/2013/01/27/using-rubys-native-nethttp-library</id>
+   <content type="html">&lt;p&gt;In this post, I am going to step through constructing a basic wrapper
+class for simplifying interaction with the &lt;code&gt;Net::HTTP&lt;/code&gt; library. I came
+across a few answers on stack overflow recently that seemed to give the
+impression that working with &lt;code&gt;Net::HTTP&lt;/code&gt; is more difficult than it needs
+to be.&lt;/p&gt;
+
+&lt;p&gt;While there are many great ruby HTTP client gems out there, the native
+library can be useful when you need to make a few simple HTTP requests.
+Try giving it a shot first before reaching for a heavier weight solution.
+If nothing else, you will have a better understanding of what is
+happening behind the scenes of your favorite HTTP client gem.&lt;/p&gt;
+
+&lt;h3&gt;The Basics&lt;/h3&gt;
+
+&lt;p&gt;If you are already familiar with basic usage of the &lt;code&gt;Net::HTTP&lt;/code&gt; library,
+you may want to &lt;a href=&quot;#skip-basics&quot;&gt;skip ahead to the good stuff&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;After browsing the &lt;a href=&quot;http://ruby-doc.org/stdlib-1.9.3/libdoc/net/http/rdoc/Net/HTTP.html&quot;&gt;documentation&lt;/a&gt; it is clear that there are many
+different ways to interact with the native library. For our purposes
+we are going to go with what is, in my opinion, one of the most
+straightforward but least well documented.&lt;/p&gt;
+
+&lt;p&gt;First, we will create a new instance of the &lt;code&gt;Net::HTTP&lt;/code&gt; class
+with a reference to our main API endpoint. The endpoint is the full
+address of the API server without any of the paths for the specific
+requests. In our case, we will use the new API based temporary email
+service that I am building. It is currently located at
+&lt;code&gt;http://dev.threedotloft.com&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;We now have our http instance that we can use to perform requests. A
+basic request is constructed using the appropriate class for the HTTP
+request method that you wish to perform. For an HTTP &lt;strong&gt;GET&lt;/strong&gt;, you would
+use &lt;code&gt;Net::HTTP::Get&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;If you don't care for checking the response code, the response object's
+class happens to reflect the status of the response as well.&lt;/p&gt;
+
+&lt;p&gt;I personally find it more succinct to operate on the response
+code.&lt;/p&gt;
+
+&lt;p&gt;Now that we are familiar with the basics of interacting with the
+library, we can begin packaging all of this up into a nice class. In the
+interest of brevity, I am going to leave out a few details such as error
+handling. I am also not including the tests
+behind this class, although I may follow up with another post that
+covers building out this class in a test driven manner and adding more
+advanced functionality.&lt;/p&gt;
+
+&lt;h3&gt;&lt;a id=&quot;skip-basics&quot;&gt;&lt;/a&gt; Creating Our Connection Class&lt;/h3&gt;
+
+&lt;p&gt;The first thing we need to do is store our http instance upon
+initialization so we can use it later to perform requests.&lt;/p&gt;
+
+&lt;p&gt;Since we know the address of the API endpoint that we are targeting, we
+use that as the default option. However, we allow for overriding that at
+runtime to provide a little more flexibility.&lt;/p&gt;
+
+&lt;p&gt;The next thing we need is a way to perform the actual requests. Our
+first shot may look something like this.&lt;/p&gt;
+
+&lt;p&gt;So far we have only implemented three of our HTTP verbs and we are
+already starting to see a lot of duplication. Lets factor the bulk of
+that duplication into a common &lt;code&gt;#request&lt;/code&gt; method. This refactoring will
+give us a central place to make changes in the event that
+we want to implement things like response body deserialization.&lt;/p&gt;
+
+&lt;p&gt;Since each request type needs a different class instantiated, we will
+include a hash to map the HTTP verbs to their respective request classes.&lt;/p&gt;
+
+&lt;p&gt;Now we can go back and refactor our original implementation to use this
+common request method and implement the remaining HTTP verbs while we
+are at it.&lt;/p&gt;
+
+&lt;p&gt;Since the TmpMail API only makes use of these four common verbs, we
+are finished with our request logic. If we need to add more later it is
+now a trivial matter of adding the correct class to the &lt;code&gt;VERB_MAP&lt;/code&gt; and
+implementing any special parameter handling within the request method.&lt;/p&gt;
+
+&lt;p&gt;We are almost finished. Our class can now perform the most common http
+actions, exposing a simple and intuitive public API. However, our
+API endpoint returns JSON response bodies and it would be a pain
+to have to deserialize the response each time we made a request so lets go
+ahead and add deserialization to the Connection class.&lt;/p&gt;
+
+&lt;p&gt;As with anything in ruby, there are many different ways we could go
+about this. I am going to add a &lt;code&gt;#request_json&lt;/code&gt; method that calls our
+original &lt;code&gt;#request&lt;/code&gt; method, parses the response body and returns the
+deserialized request.&lt;/p&gt;
+
+&lt;blockquote&gt;&lt;p&gt;In a real application it would typically not be a good idea to
+silently swallow the JSON parser error. It would be far better to define
+your own custom exception class and raise that. Just make sure to
+clearly document the exceptions your method may raise and why.&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;p&gt;Since I prefer to also return the status code of the response, I
+chose to package the code and deserialized body together using ruby's
+OpenStruct library. For those of you not familiar with the OpenStruct
+library, I recommend checking out the &lt;a href=&quot;http://ruby-doc.org/stdlib-1.9.3/libdoc/ostruct/rdoc/OpenStruct.html&quot;&gt;documentation&lt;/a&gt;. It provides a
+quick way to bundle together attributes within an object. If the
+requirements grow and you need things like dynamic content type
+deserialization, I would likely factor this out into a custom Response class.&lt;/p&gt;
+
+&lt;p&gt;Now we will go ahead and update our public verb methods to use this new
+&lt;code&gt;request_json&lt;/code&gt; method. Let's take a look at the final product.&lt;/p&gt;
+
+&lt;p&gt;There we have it. Our finished HTTP client. Lets take it out for a quick
+spin and check a few emails.&lt;/p&gt;
+
+&lt;p&gt;I'm going to store the authentication token in a variable for use
+in the next few API calls.&lt;/p&gt;
+
+&lt;p&gt;Next we are going to request a list of the available domains on the
+server and then join one so we can start receiving emails.&lt;/p&gt;
+
+&lt;p&gt;Based on the output from the last call, you can see that I currently own
+two email addresses. The first is &lt;code&gt;dank@dev.threedotloft.com&lt;/code&gt; and the
+second is &lt;code&gt;dknox@dev.threedotloft.com&lt;/code&gt;. They both currently have zero
+messages in their Inbox. I am going to send a test email out and see if
+it shows up in my email service.&lt;/p&gt;
+
+&lt;p&gt;You will have to imagine the sending of the email as it is currently
+taking place off-camera...&lt;/p&gt;
+
+&lt;p&gt;Alright, the test email has been sent. Lets call the API again to see if
+it has arrived.&lt;/p&gt;
+
+&lt;p&gt;Awesome, it looks like my test email arrived successfully, thus concluding this
+demonstration.&lt;/p&gt;
+
+&lt;p&gt;Feel free to use this code yourself. As mentioned above, this basic example is mostly devoid of error
+handling. If you choose to use it you should probably modify it a bit
+first.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Post Zero</title>
+   <link href="http://danknox.github.com/2012/12/09/post-zero"/>
+   <updated>2012-12-09T00:00:00-08:00</updated>
+   <id>http://danknox.github.com/2012/12/09/post-zero</id>
+   <content type="html">&lt;p&gt;Well folks, this is it... post zero.&lt;/p&gt;
+
+&lt;p&gt;The blog has been built. Decisions
+have been made. Platforms chosen. Layouts constructed. The CSS has been tweaked and tuned to the best of my aesthetically
+challenged abilities. Plugins were added. Plugins were
+removed. Several different &lt;a href=&quot;http://jekyllrb.com/&quot;&gt;Jekyll&lt;/a&gt; configurations were implemented
+and subsequently tossed aside. All with the intended goal of reaching this moment
+right now. The first post.&lt;/p&gt;
+
+&lt;p&gt;And now we are here. All excuses for not producing tangible content
+systematically decimated. I guess the only thing left to do is &lt;code&gt;git
+commit&lt;/code&gt; this thing and get to work on a real post.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ 
+</feed>
+

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<head>
+
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <title>Dan Knox - Using Ruby's Native Net::HTTP Library</title>
+  <meta name="author" content="Dan Knox" />
+  <link href="http://feeds.feedburner.com/dan-knox" rel="alternate" title="Dan Knox" type="application/atom+xml" />
+  <meta name="readability-verification" content="QCzSs992GxmRYRKVpPeZ6LE2tS8aYKxsSSQKV8YM"/>
+
+  <!-- Bootstrap CSS -->
+  <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Font Awesome CSS -->
+  <link href="/css/font-awesome.css" rel="stylesheet">
+
+  <!-- syntax highlighting CSS -->
+  <link rel="stylesheet" href="/css/syntax.css" type="text/css" />
+
+  <!-- jQuery -->
+  <script src="/javascripts/jquery.js"></script>
+
+  <!-- Bootstrap JavaScript -->
+  <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
+
+  <!-- Coderwall CSS/JavaScript -->
+  <link href="http://coderwall.com/stylesheets/jquery.coderwall.css" media="all" rel="stylesheet" type="text/css">
+  <script src="http://coderwall.com/javascripts/jquery.coderwall.js"></script>
+
+  <!-- Homepage CSS -->
+  <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+
+</head>
+<body>
+
+  <div class="container">
+    <div class="span11 page-wrapper">
+
+    <header class="jumbotron subhead" id="overview">
+    <div class="row">
+      <div class="span6">
+        <h1>Dan Knox</h1>
+        <p class="lead">Thoughts. Comments. Projects.</p>
+      </div>
+      <div class="pull-right" id="contact-info">
+  <div><i class="icon-envelope"></i> <a href="mailto://dknox@threedotloft.com">Email</a></div>
+  <div><i class="icon-github"></i> <a href="https://github.com/DanKnox">Github</a></div>
+  <div><i class="icon-heart"></i> <a href="https://rubygems.org/profiles/DanKnox">Rubygems</a></div>
+</div>
+
+    </div>
+
+    <div class="subnav">
+      <ul class="nav nav-pills" id="main-navigation">
+        <li><a class="" href="/">Home</a></li>
+        <li><a class="" href="/projects.html">Projects</a></li>
+        <li><a class="active" href="/posts.html">Posts</a></li>
+      </ul>
+    </div>
+
+    </header>
+    <div class="row">
+
+      <div id="content" class="span8">
+  <article class="post">
+    <header>
+      <h2>
+        <a href="/2013/01/27/using-rubys-native-nethttp-library" rel="bookmark" title="Permanent link to ">Using Ruby's Native Net::HTTP Library</a>
+      </h2>
+      <h5>
+        <avatar><img
+                class="avatar"
+                src="http://s.gravatar.com/avatar/14c959ae61035ade3e136aaeedfc6e42?s=40"
+                alt="Dan Knox"
+                width="40"
+                height="40">
+        </avatar>
+        <time>January 27, 2013</time> - 
+        <author>Dan Knox</author>
+      </h5>
+    </header>
+
+    <p></p>
+
+    <p>In this post, I am going to step through constructing a basic wrapper
+class for simplifying interaction with the <code>Net::HTTP</code> library. I came
+across a few answers on stack overflow recently that seemed to give the
+impression that working with <code>Net::HTTP</code> is more difficult than it needs
+to be.</p>
+
+<p>While there are many great ruby HTTP client gems out there, the native
+library can be useful when you need to make a few simple HTTP requests.
+Try giving it a shot first before reaching for a heavier weight solution.
+If nothing else, you will have a better understanding of what is
+happening behind the scenes of your favorite HTTP client gem.</p>
+
+<h3>The Basics</h3>
+
+<p>If you are already familiar with basic usage of the <code>Net::HTTP</code> library,
+you may want to <a href="#skip-basics">skip ahead to the good stuff</a>.</p>
+
+<p>After browsing the <a href="http://ruby-doc.org/stdlib-1.9.3/libdoc/net/http/rdoc/Net/HTTP.html">documentation</a> it is clear that there are many
+different ways to interact with the native library. For our purposes
+we are going to go with what is, in my opinion, one of the most
+straightforward but least well documented.</p>
+
+<p>First, we will create a new instance of the <code>Net::HTTP</code> class
+with a reference to our main API endpoint. The endpoint is the full
+address of the API server without any of the paths for the specific
+requests. In our case, we will use the new API based temporary email
+service that I am building. It is currently located at
+<code>http://dev.threedotloft.com</code>.</p>
+
+<p>We now have our http instance that we can use to perform requests. A
+basic request is constructed using the appropriate class for the HTTP
+request method that you wish to perform. For an HTTP <strong>GET</strong>, you would
+use <code>Net::HTTP::Get</code>.</p>
+
+<p>If you don't care for checking the response code, the response object's
+class happens to reflect the status of the response as well.</p>
+
+<p>I personally find it more succinct to operate on the response
+code.</p>
+
+<p>Now that we are familiar with the basics of interacting with the
+library, we can begin packaging all of this up into a nice class. In the
+interest of brevity, I am going to leave out a few details such as error
+handling. I am also not including the tests
+behind this class, although I may follow up with another post that
+covers building out this class in a test driven manner and adding more
+advanced functionality.</p>
+
+<h3><a id="skip-basics"></a> Creating Our Connection Class</h3>
+
+<p>The first thing we need to do is store our http instance upon
+initialization so we can use it later to perform requests.</p>
+
+<p>Since we know the address of the API endpoint that we are targeting, we
+use that as the default option. However, we allow for overriding that at
+runtime to provide a little more flexibility.</p>
+
+<p>The next thing we need is a way to perform the actual requests. Our
+first shot may look something like this.</p>
+
+<p>So far we have only implemented three of our HTTP verbs and we are
+already starting to see a lot of duplication. Lets factor the bulk of
+that duplication into a common <code>#request</code> method. This refactoring will
+give us a central place to make changes in the event that
+we want to implement things like response body deserialization.</p>
+
+<p>Since each request type needs a different class instantiated, we will
+include a hash to map the HTTP verbs to their respective request classes.</p>
+
+<p>Now we can go back and refactor our original implementation to use this
+common request method and implement the remaining HTTP verbs while we
+are at it.</p>
+
+<p>Since the TmpMail API only makes use of these four common verbs, we
+are finished with our request logic. If we need to add more later it is
+now a trivial matter of adding the correct class to the <code>VERB_MAP</code> and
+implementing any special parameter handling within the request method.</p>
+
+<p>We are almost finished. Our class can now perform the most common http
+actions, exposing a simple and intuitive public API. However, our
+API endpoint returns JSON response bodies and it would be a pain
+to have to deserialize the response each time we made a request so lets go
+ahead and add deserialization to the Connection class.</p>
+
+<p>As with anything in ruby, there are many different ways we could go
+about this. I am going to add a <code>#request_json</code> method that calls our
+original <code>#request</code> method, parses the response body and returns the
+deserialized request.</p>
+
+<blockquote><p>In a real application it would typically not be a good idea to
+silently swallow the JSON parser error. It would be far better to define
+your own custom exception class and raise that. Just make sure to
+clearly document the exceptions your method may raise and why.</p></blockquote>
+
+<p>Since I prefer to also return the status code of the response, I
+chose to package the code and deserialized body together using ruby's
+OpenStruct library. For those of you not familiar with the OpenStruct
+library, I recommend checking out the <a href="http://ruby-doc.org/stdlib-1.9.3/libdoc/ostruct/rdoc/OpenStruct.html">documentation</a>. It provides a
+quick way to bundle together attributes within an object. If the
+requirements grow and you need things like dynamic content type
+deserialization, I would likely factor this out into a custom Response class.</p>
+
+<p>Now we will go ahead and update our public verb methods to use this new
+<code>request_json</code> method. Let's take a look at the final product.</p>
+
+<p>There we have it. Our finished HTTP client. Lets take it out for a quick
+spin and check a few emails.</p>
+
+<p>I'm going to store the authentication token in a variable for use
+in the next few API calls.</p>
+
+<p>Next we are going to request a list of the available domains on the
+server and then join one so we can start receiving emails.</p>
+
+<p>Based on the output from the last call, you can see that I currently own
+two email addresses. The first is <code>dank@dev.threedotloft.com</code> and the
+second is <code>dknox@dev.threedotloft.com</code>. They both currently have zero
+messages in their Inbox. I am going to send a test email out and see if
+it shows up in my email service.</p>
+
+<p>You will have to imagine the sending of the email as it is currently
+taking place off-camera...</p>
+
+<p>Alright, the test email has been sent. Lets call the API again to see if
+it has arrived.</p>
+
+<p>Awesome, it looks like my test email arrived successfully, thus concluding this
+demonstration.</p>
+
+<p>Feel free to use this code yourself. As mentioned above, this basic example is mostly devoid of error
+handling. If you choose to use it you should probably modify it a bit
+first.</p>
+
+
+    <div class="hero-unit">
+      <nav id="related">
+        <h3>Related Posts</h3>
+        <ul class="posts">
+          
+            <p><li><span>16 Mar 2013</span> - <a href="/2013/03/16/websocketrails-on-the-pogoapp-blog">WebsocketRails on the Pogoapp Blog</a></li></p>
+          
+            <p><li><span>09 Dec 2012</span> - <a href="/2012/12/09/post-zero">Post Zero</a></li></p>
+          
+        </ul>
+      </nav>
+    </div>
+
+  </article>
+</div>
+
+<nav id="sidebar" class="span3">
+  <h3 class="recent-posts">Recent Posts</h3>
+  <hr />
+  <div id="posts">
+    
+    <p><i class="icon-link"></i> <a href="/2013/03/16/websocketrails-on-the-pogoapp-blog">WebsocketRails on the Pogoapp Blog</a></p>
+    
+    <p><i class="icon-link"></i> <a href="/2013/01/27/using-rubys-native-nethttp-library">Using Ruby's Native Net::HTTP Library</a></p>
+    
+    <p><i class="icon-link"></i> <a href="/2012/12/09/post-zero">Post Zero</a></p>
+    
+    <hr>
+  </div>
+  <section class="coderwall" data-coderwall-username="DanKnox" data-coderwall-orientation="vertical"></section>
+</nav>
+
+
+
+    </div>
+
+      <hr>
+
+      <footer>
+        &copy; Dan Knox 2013
+      </footer>
+
+    </div>
+  </div>
+
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-27751069-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+
+    </script>
+  </body>
+</html>
